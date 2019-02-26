@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Estimate</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <style>
+        /* .hide {
+            visibility: hidden;
+        } */
+        .menubar {
+            background-color: #555555;
+            min-height: 800px;
+        }
+
+        .sides {
+            margin-left: 2%;
+        }
+
+        .sides1 {
+            margin-left: 10%;
+        }
+
+        .top {
+            background-color: #3b5998;
+            min-height: 80px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 14px 31px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 3px 1px;
+            cursor: pointer;
+        }
+
+        .button2 {
+            background-color: #008CBA;
+        }
+
+        /* Blue */
+        .button3 {
+            background-color: #f44336;
+        }
+
+        /* Red */
+        .button4 {
+            background-color: #e7e7e7;
+            color: black;
+        }
+
+        /* Gray */
+        .button5 {
+            background-color: #555555;
+        }
+
+        .button6 {
+            background-color: #72bcd4;
+            margin: 15px 1px;
+        }
+    </style>
+</head>
+
+<body onload="myFunction()">
+    <!-- <div class="container layout"> -->
+    <div class="row">
+        <div class="col-md-10 top ">
+            <img src="logo.png" alt="S3" height="80" width="80">
+        </div>
+        <div class="col-md-2 top ">
+        <a class="button button6" onclick="logout()">Logout</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a class="button" onclick="newOrder()">New</a>
+            <a class="button" onclick="submitOrder()">Save</a>
+            <a class="button" onclick="editKey()">Edit</a>
+            <a class="button button3" onclick="removeKey()">Delete</a>
+            <a class="button button3" onclick="location.href='estimatelist.html';">Cancel</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 sides1">
+            <h1>Estimate</h1>
+            <form>
+                <div class="form-group">
+                    <label for="partNumberField">Part Number: </label>
+                    <input type="text" id="partNumberField">
+                </div>
+
+                <!-- todo: we should add a phone and an email field too so we can contact them back!! -->
+                <!-- This would be almost the same as the partNumberField, you have to change a couple things though, can you see what? -->
+
+                <div class="form-group">
+                    <label for="descriptionField">Description: &nbsp; </label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="descriptionField">
+                </div>
+
+                <div class="form-group">
+                    <label for="notesField">Part Notes: &ensp; </label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="notesField">
+                </div>
+
+                <div class="form-group">
+                    <label for="qtyField">QTY: &emsp; &emsp; &emsp; </label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="qtyField">
+                </div>
+                <div class="form-group">
+                    <label for="customerField">Customer: &ensp; &nbsp; </label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="customerField">
+                </div>
+                <div class="form-group">
+                    <label for="revisionField">Revision: &ensp; &ensp;</label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="revisionField">
+                </div>
+                <div class="form-group">
+                    <label for="drawingNumberField">Drawing: &ensp; &ensp;</label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="drawingNumberField">
+                </div>
+                <div class="form-group">
+                    <label for="dateField">Save Date: &ensp; &ensp;</label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="dateField">
+                </div>
+                <!-- it's important NOT to use <button> here because that will do something els (that's why we use <a> and make it look like a button using css -->
+                <!-- <a class="button" onclick="newOrder()">New</a>
+                <a class="button" onclick="submitOrder()">Save</a>
+                <a class="button" onclick="editKey()">Edit</a> -->
+                <!-- <br> -->
+                <!-- <input type="text" id="searchField">
+                <a class="button" onclick="searchKey()">Part Search</a>
+                <input type="text" id="deleteField">
+                <a class="button button3" onclick="removeKey()">Delete</a> -->
+
+                <div class="form-group">
+                    <a class="button" id="testdata" onclick="testData()">Test Data</a>
+                   
+                </div>
+            </form>
+        </div>
+
+
+        <div class="col-md-4">
+
+            <h1>Calculation</h1>
+            <form>
+
+                <div class="form-group">
+                    <label for="opField">SU/OP part (minutes): &ensp; </label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="opField">
+                </div>
+
+                <div class="form-group">
+                    <label for="machineField">Machine Rate Hour: &emsp; </label>
+                    <input type="text" id="machineField" value="60">
+                </div>
+
+                <div class="form-group">
+                    <label for="machinestField">Machinest Rate Hour: &ensp; </label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="machinestField" value="25">
+                </div>
+                <div class="form-group">
+                    <label for="programField">Program Total: &emsp; &emsp; &ensp;</label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="programField" value="50">
+                </div>
+                <div class="form-group">
+                    <label for="materialField">Material Job: &emsp; &emsp; &ensp; &ensp;</label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="materialField">
+                </div>
+
+                <div class="form-group">
+                    <label for="secondaryField">Secondary per Job: &emsp; </label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="secondaryField">
+                </div>
+                <div class="form-group">
+                    <label for="fixtureField">Fixture per Job: &emsp; &ensp; &ensp;</label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="fixtureField">
+                </div>
+                <div class="form-group">
+                    <label for="specialToolField">Specialty Tools: &emsp; &ensp; &ensp;</label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="specialToolField">
+                </div>
+                <div class="form-group">
+                    <label for="shippingField">Shipping per Job: &ensp; &ensp;</label>
+                    <!-- textarea are like inputs but they're for long text! -->
+                    <input type="text" id="shippingField" value="30">
+                </div>
+                <a class="button" onclick="calculation()">Calculation</a>
+                <br>
+                <br>
+                <label for="totalField">Total Cost per part: </label>
+                <!-- textarea are like inputs but they're for long text! -->
+                <input type="text" id="totalField">
+                <br>
+                <label for="totalJobField">Total Cost per Job: </label>
+                <!-- textarea are like inputs but they're for long text! -->
+                <input type="text" id="totalJobField">
+            </form>
+        </div>
+        <!-- <div class="col-md-2"> -->
+        <!-- <h1>Estimates</h1> -->
+        <!-- <div id="previousOrders"> -->
+        <!-- We will use javascript to insert html for the orders list here -->
+        <!-- if you don't want orders to show on the homepage, you can duplicate the page and remove this from here, leave the other one with a werid name so only you can find it -->
+        <!-- </div> -->
+        <!-- </div> -->
+    </div>
+    <!-- </div> -->
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+
+    <script>
+        var testCount = 0;
+        //Store information about your firebase so we can connect
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //IMPORTANT: REPLACE THESE WITH YOUR VALUES (these ones won't work)
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        var config = {
+            apiKey: "AIzaSyBWEZqPcKvPMcc3mieexX8nqcM0ItZnAmg",
+            authDomain: "s3dsb-eee49.firebaseapp.com",
+            databaseURL: "https://s3dsb-eee49.firebaseio.com",
+            projectId: "s3dsb-eee49",
+            storageBucket: "",
+            messagingSenderId: "463883835461"
+        };
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //initialize your firebase
+        firebase.initializeApp(config);
+        var database = firebase.database();
+        //create a variable to hold our orders list from firebase
+        var firebaseOrdersCollection = database.ref().child('demoparts');
+        //this function is called when the submit button is clicked
+
+        function calculation() {
+            document.getElementById('totalField').value = "";
+            document.getElementById('totalJobField').value = "";
+
+            var qty = $('#qtyField').val();
+            if (qty == "") {
+                qty = "0"
+                document.getElementById('qtyfield').value = "0";
+            }
+            var qt = parseInt(qty);
+            console.log(qt);
+
+            var opTime = $('#opField').val();
+            if (opTime == "") {
+                opTime = "0";
+                document.getElementById('opField').value = "0";
+            }
+            var op = parseInt(opTime);
+            console.log(op);
+
+            var machinePrice = $('#machineField').val()
+            if (machinePrice == "") {
+                machinePrice = "0";
+                document.getElementById('machineField').value = "0";
+            }
+            var machine = parseInt(machinePrice);
+            console.log(machine);
+
+            var machinestPrice = $('#machinestField').val()
+            if (machinestPrice == "") {
+                machinestPrice = "0";
+                document.getElementById('machinestField').value = "0";
+            }
+            var machinest = parseInt(machinestPrice);
+            console.log(machinest);
+
+            var materialPrice = $('#materialField').val()
+            if (materialPrice == "") {
+                materialPrice = "0";
+                document.getElementById('materialField').value = "0";
+            }
+            var material = parseInt(materialPrice);
+            console.log(material);
+
+            var secondaryPrice = $('#secondaryField').val()
+            if (secondaryPrice == "") {
+                secondaryPrice = "0";
+                document.getElementById('secondaryField').value = "0";
+            }
+            var secondary = parseInt(secondaryPrice);
+            console.log(secondary);
+
+            var programPrice = $('#programField').val()
+            if (programPrice == "") {
+                programPrice = "0";
+                document.getElementById('programField').value = "0";
+            }
+            var program = parseInt(programPrice);
+            console.log(program);
+
+            var fixturePrice = $('#fixtureField').val()
+            if (fixturePrice == "") {
+                fixturePrice = "0";
+                document.getElementById('fixtureField').value = "0";
+            }
+            var fixture = parseInt(fixturePrice);
+            console.log(fixture);
+
+            var specialToolPrice = $('#specialToolField').val()
+            if (specialToolPrice == "") {
+                specialToolPrice = "0";
+                document.getElementById('specialToolField').value = "0";
+            }
+            var special = parseInt(specialToolPrice);
+            console.log(special);
+
+            var shippingPrice = $('#shippingField').val()
+            if (shippingPrice == "") {
+                shippingPrice = "0";
+                document.getElementById('shippingField').value = "0";
+            }
+            var shipping = parseInt(shippingPrice);
+            console.log(shipping);
+
+            var machinePerPart = (machine / 60) * op;
+            var machinestPerPart = (machinest / 60) * op;
+            var materialPerPart = (material / qt);
+            var secondaryPerPart = (secondary / qt);
+            var programPerPart = (program / qt);
+            var fixturePerPart = (fixture / qt);
+            var specialPerPart = (special / qt);
+            var shippingPerPart = (shipping / qt);
+
+            var totalPricePart = (machinePerPart + machinestPerPart + materialPerPart + secondaryPerPart + programPerPart + specialPerPart + fixturePerPart + shippingPerPart).toFixed(2);
+            var totalJobPrice = (totalPricePart * qt).toFixed(2);
+
+
+            document.getElementById('totalField').value = " $" + totalPricePart;
+            document.getElementById('totalJobField').value = " $" + totalJobPrice;
+
+        }
+
+        function pause() {
+            sleep(1000);
+        }
+
+        function searchKey() {
+            clearFields();
+            var dataArray = [];
+            var exist = false;
+            var searchPart = document.getElementById('searchField').value;
+
+            firebaseOrdersCollection.on('value', function (orders) {
+
+                orders.forEach(function (firebaseOrderReference) {
+                    //this gets the actual data (JSON) for the order.
+                    var order = firebaseOrderReference.val();
+                    if (order.fullName == searchPart) {
+                        exist = true;
+                        dataArray.push(order);
+                    }
+                    console.log(order); //check your console to see it!
+                    console.log("dataArray Length: " + dataArray.length)
+                });
+
+                if (exist == true) {
+                    console.log("found it")
+                    document.getElementById('partNumberField').value = dataArray[0].fullName;
+                    document.getElementById('descriptionField').value = dataArray[0].notes;
+                    document.getElementById('notesField').value = dataArray[0].type;
+                    document.getElementById('qtyField').value = dataArray[0].qty;
+                    document.getElementById('customerField').value = dataArray[0].customer;
+                    document.getElementById('revisionField').value = dataArray[0].revision;
+                    document.getElementById('drawingNumberField').value = dataArray[0].drawingNumber;
+                    document.getElementById('opField').value = dataArray[0].ops;
+                    document.getElementById('machineField').value = dataArray[0].machinePrice;
+                    document.getElementById('machinestField').value = dataArray[0].machinestPrice;
+                    document.getElementById('materialField').value = dataArray[0].materialPrice;
+                    document.getElementById('secondaryField').value = dataArray[0].secondaryPrice;
+                    document.getElementById('programField').value = dataArray[0].programPrice;
+                    document.getElementById('fixtureField').value = dataArray[0].fixturePrice;
+                    document.getElementById('specialToolField').value = dataArray[0].specialToolPrice;
+                    document.getElementById('shippingField').value = dataArray[0].shippingPrice;
+                    document.getElementById('totalField').value = dataArray[0].partPrice;
+                    document.getElementById('totalJobField').value = dataArray[0].jobPrice;
+                    var n = new Date(parseInt(dataArray[0].saveDate));
+                    var a = n.toLocaleString();
+                    document.getElementById('dateField').value = a;
+
+                } else {
+                    console.log("does not exist")
+                }
+
+            });
+        };
+
+        function removeKey() {
+            var partDelete = document.getElementById('partNumberField').value
+            firebaseOrdersCollection.child(partDelete).remove();
+            clearFields();
+            window.alert("Deleted");
+            window.location.href = "estimatelist.html";
+        };
+
+        function editKey() {
+            var newName = $('#partNumberField').val();
+            firebaseOrdersCollection.child("99").update({ "fullName": newName });
+        };
+
+        function clearFields() {
+            document.getElementById('partNumberField').value = "";
+            document.getElementById('descriptionField').value = "";
+            document.getElementById('notesField').value = "";
+            document.getElementById('qtyField').value = "";
+            document.getElementById('customerField').value = "";
+            document.getElementById('revisionField').value = "";
+            document.getElementById('drawingNumberField').value = "";
+            document.getElementById('opField').value = "";
+            document.getElementById('machineField').value = "";
+            document.getElementById('machinestField').value = "";
+            document.getElementById('materialField').value = "";
+            document.getElementById('secondaryField').value = "";
+            document.getElementById('programField').value = "";
+            document.getElementById('fixtureField').value = "";
+            document.getElementById('specialToolField').value = "";
+            document.getElementById('shippingField').value = "";
+            document.getElementById('totalField').value = "";
+            document.getElementById('totalJobField').value = "";
+            document.getElementById('dateField').value = "";
+        };
+
+        function newOrder() {
+            document.getElementById('partNumberField').value = "";
+            document.getElementById('descriptionField').value = "";
+            document.getElementById('notesField').value = "";
+            document.getElementById('qtyField').value = "";
+            document.getElementById('customerField').value = "";
+            document.getElementById('revisionField').value = "";
+            document.getElementById('drawingNumberField').value = "";
+            document.getElementById('opField').value = "";
+            document.getElementById('machineField').value = "60";
+            document.getElementById('machinestField').value = "25";
+            document.getElementById('materialField').value = "";
+            document.getElementById('secondaryField').value = "";
+            document.getElementById('programField').value = "50";
+            document.getElementById('fixtureField').value = "";
+            document.getElementById('specialToolField').value = "";
+            document.getElementById('shippingField').value = "30";
+            document.getElementById('totalField').value = "";
+            document.getElementById('totalJobField').value = "";
+            document.getElementById('dateField').value = "";
+        }
+
+        function testData() {
+            clearFields();
+            testCount = testCount + 1;
+            var ranPartNum = Math.floor(Math.random() * (9999999 - 1111111 + 1)) + 1111111;
+            var ranQty = Math.floor(Math.random() * (500 - 1 + 1)) + 1;
+            document.getElementById('partNumberField').value = ranPartNum + "TEST-" + testCount;
+            document.getElementById('descriptionField').value = "Spacer Test";
+            document.getElementById('notesField').value = ranPartNum + "TEST-" + testCount + " Spacer Test";
+            document.getElementById('qtyField').value = ranQty;
+            document.getElementById('customerField').value = "PLAYGROUND";
+            document.getElementById('revisionField').value = "T";
+            document.getElementById('drawingNumberField').value = ranPartNum;
+            document.getElementById('opField').value = "10";
+            document.getElementById('machineField').value = "60";
+            document.getElementById('machinestField').value = "25";
+            document.getElementById('materialField').value = "125";
+            document.getElementById('secondaryField').value = "167.50";
+            document.getElementById('programField').value = "50";
+            document.getElementById('fixtureField').value = "250";
+            document.getElementById('specialToolField').value = "108";
+            document.getElementById('shippingField').value = "30";
+            document.getElementById('totalField').value = "";
+            document.getElementById('totalJobField').value = "";
+            document.getElementById('dateField').value = "";
+        }
+
+        function submitOrder() {
+
+            // // Database search to see if part already exists
+
+            // var exist = false;
+            // var dataArray = [];
+            // var searchPart = document.getElementById('partNumberField').value;
+
+
+
+            // firebaseOrdersCollection.on('value', function (orders) {
+
+            //     orders.forEach(function (firebaseOrderReference) {
+            //         //this gets the actual data (JSON) for the order.
+            //         var order = firebaseOrderReference.val();
+            //         // window.alert(order.fullName);
+            //         dataArray.push(order.fullName);
+            //         // if (order.fullName == searchPart) {
+
+            //         // }
+            //     });
+
+            // });
+
+            // for (i = 0; i < dataArray.length; i++) {
+            //     if (dataArray[i] === searchPart) {
+            //         firebaseOrdersCollection.child(searchPart).remove();
+            //     }
+            // }
+            // End of database search
+
+            var part = document.getElementById('partNumberField').value;
+            firebaseOrdersCollection.child(part).remove();
+
+            var d = Date.now();
+            var n = new Date(d);
+            var a = n.toLocaleString();
+            document.getElementById('dateField').value = a;
+
+            var order = {
+                fullName: $('#partNumberField').val(), //another way you could write is $('#myForm [name="fullname"]').
+                notes: $('#descriptionField').val(), //another way you could write is $('#myForm [name="fullname"]').
+                type: $('#notesField').val(),
+                qty: $('#qtyField').val(),
+                customer: $('#customerField').val(),
+                revision: $('#revisionField').val(),
+                drawingNumber: $('#drawingNumberField').val(),
+                ops: $('#opField').val(),
+                machinePrice: $('#machineField').val(),
+                machinestPrice: $('#machinestField').val(),
+                materialPrice: $('#materialField').val(),
+                secondaryPrice: $('#secondaryField').val(),
+                programPrice: $('#programField').val(),
+                fixturePrice: $('#fixtureField').val(),
+                specialToolPrice: $('#specialToolField').val(),
+                shippingPrice: $('#shippingField').val(),
+                partPrice: $('#totalField').val(),
+                jobPrice: $('#totalJobField').val(),
+                saveDate: d.toString()
+            };
+            //'push' (aka add) your order to the existing list
+            // firebaseOrdersCollection.push(order); //'orders' is the name of the 'collection' (aka database table)
+            firebaseOrdersCollection.child(order.fullName).set(order);
+            window.location.href = "estimatelist.html";
+        };
+
+        function myFunction() {
+            document.getElementById("testdata").style.visibility = "hidden";
+
+            var loggedInUser = localStorage.getItem("loggedInUser");
+            console.log(loggedInUser);
+
+            if (loggedInUser == "4VFELSjPKzddOcoMnTzgD2xSeuJ2") {
+                document.getElementById("testdata").style.visibility = "visible";
+            }
+
+            var selectedpartname = localStorage.getItem("selectedpartname");
+            console.log(selectedpartname);
+            if (selectedpartname !== null) {
+                console.log("i see it");
+                clearFields();
+                var dataArray = [];
+                var exist = false;
+
+                firebaseOrdersCollection.on('value', function (orders) {
+
+                    orders.forEach(function (firebaseOrderReference) {
+                        //this gets the actual data (JSON) for the order.
+                        var order = firebaseOrderReference.val();
+                        if (order.fullName == selectedpartname) {
+                            exist = true;
+                            dataArray.push(order);
+                        }
+                        console.log(order); //check your console to see it!
+                        console.log("dataArray Length: " + dataArray.length)
+                    });
+
+                    if (exist == true) {
+                        console.log("found it")
+                        document.getElementById('partNumberField').value = dataArray[0].fullName;
+                        document.getElementById('descriptionField').value = dataArray[0].notes;
+                        document.getElementById('notesField').value = dataArray[0].type;
+                        document.getElementById('qtyField').value = dataArray[0].qty;
+                        document.getElementById('customerField').value = dataArray[0].customer;
+                        document.getElementById('revisionField').value = dataArray[0].revision;
+                        document.getElementById('drawingNumberField').value = dataArray[0].drawingNumber;
+                        document.getElementById('opField').value = dataArray[0].ops;
+                        document.getElementById('machineField').value = dataArray[0].machinePrice;
+                        document.getElementById('machinestField').value = dataArray[0].machinestPrice;
+                        document.getElementById('materialField').value = dataArray[0].materialPrice;
+                        document.getElementById('secondaryField').value = dataArray[0].secondaryPrice;
+                        document.getElementById('programField').value = dataArray[0].programPrice;
+                        document.getElementById('fixtureField').value = dataArray[0].fixturePrice;
+                        document.getElementById('specialToolField').value = dataArray[0].specialToolPrice;
+                        document.getElementById('shippingField').value = dataArray[0].shippingPrice;
+                        document.getElementById('totalField').value = dataArray[0].partPrice;
+                        document.getElementById('totalJobField').value = dataArray[0].jobPrice;
+                        var n = new Date(parseInt(dataArray[0].saveDate));
+                        var a = n.toLocaleString();
+                        document.getElementById('dateField').value = a;
+                        localStorage.removeItem("selectedpartname");
+                    } else {
+                        console.log("does not exist")
+                    }
+
+                });
+
+            }
+        }
+
+        function logout() {
+            firebase.auth().signOut();
+            window.location.href = "index.html";
+        }
+
+        // //create a 'listener' which waits for changes to the values inside the firebaseOrdersCollection 
+        // firebaseOrdersCollection.on('value', function (orders) {
+        //     //create an empty string that will hold our new HTML
+        //     var allOrdersHtml = "";
+        //     //this is saying foreach order do the following function...
+        //     orders.forEach(function (firebaseOrderReference) {
+        //         //this gets the actual data (JSON) for the order.
+        //         var order = firebaseOrderReference.val();
+        //         // console.log(order); //check your console to see it!
+        //         //create html for the individual order
+        //         //note: this is hard to make look pretty! Be sure to keep your indents nice :-)
+        //         //IMPORTANT: we use ` here instead of ' (notice the difference?) That allows us to use enters
+        //         var individialOrderHtml = `<div class='item'>
+		// 										<div class="row">
+  		// 											<div>
+		// 												<p>`+ order.fullName + `</p>
+		// 											</div>
+		// 										</div>
+		// 									</div>`;
+        //         //add the individual order html to the end of the allOrdersHtml list
+        //         allOrdersHtml = allOrdersHtml + individialOrderHtml;
+        //     });
+        //     //actaull put the html on the page inside the element with the id PreviousOrders
+        //     $('#previousOrders').html(allOrdersHtml);
+        //     //note: an alternative approach would be to create a hidden html element for one order on the page, duplicate it in the forEach loop, unhide it, and replace the information, and add it back. 
+        // });
+
+
+    </script>
+
+</body>
+
+</html>

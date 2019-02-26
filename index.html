@@ -1,0 +1,126 @@
+<html>
+
+<head>
+  <title>S3 - Demo</title>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="loginstyle.css" />
+</head>
+
+<body>
+
+  <div id="login_div" class="main-div">
+    <center>
+      <h3>S3 Demo Login</h3>
+      <h5 style="color: blue;">Demo Login info</h5>
+      <h5 style="color: blue;">Email: s3.demo.tech@gmail.com</h5>
+      <h5 style="color: blue;">Password: password</h5>
+    </center>
+    <input type="email" placeholder="Email..." id="email_field" />
+    <input type="password" placeholder="Password..." id="password_field" />
+
+    <button onclick="login()">Login to S3 (Demo)</button>
+  </div>
+
+  <div id="user_div" class="loggedin-div">
+    <h3>Welcome User</h3>
+    <p id="user_para">Welcome to Firebase web login Example. You're currently logged in.</p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBWEZqPcKvPMcc3mieexX8nqcM0ItZnAmg",
+      authDomain: "s3dsb-eee49.firebaseapp.com",
+      databaseURL: "https://s3dsb-eee49.firebaseio.com",
+      projectId: "s3dsb-eee49",
+      storageBucket: "",
+      messagingSenderId: "463883835461"
+    };
+    firebase.initializeApp(config);
+    var database = firebase.database();
+    //create a variable to hold our orders list from firebase
+    var firebaseLoginsCollection = database.ref().child('logins');
+
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // User is signed in.
+       console.log("The user is: " + firebase.auth().currentUser);
+       console.log(JSON.stringify(firebase.auth().currentUser));
+       console.log(JSON.stringify(firebase.auth().currentUser.uid));
+
+        document.getElementById("user_div").style.display = "block";
+        document.getElementById("login_div").style.display = "none";
+
+        var user = firebase.auth().currentUser;
+
+        if (user != null) {
+          var loggedInUser = JSON.stringify(firebase.auth().currentUser.uid);
+            // sessionStorage.setItem("selectedpartname", selectedpartname);
+            localStorage.loggedInUser = loggedInUser;
+
+          window.location.href = "estimatelist.html";
+
+          // var email_id = user.email;
+          // document.getElementById("user_para").innerHTML = "Welcome User : " + email_id;
+
+        }
+
+      } else {
+        // No user is signed in.
+
+        document.getElementById("user_div").style.display = "none";
+        document.getElementById("login_div").style.display = "block";
+
+      }
+    });
+
+    function login() {
+      var userEmail = document.getElementById("email_field").value;
+      var userPass = document.getElementById("password_field").value;
+
+      firebase.auth().signInWithEmailAndPassword(userEmail, userPass).catch(function (error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+
+        window.alert("Error : " + errorMessage + " Please check your credentials and try again.");
+
+        // ...
+      });
+
+      var d = Date.now().toString();
+
+      var user = {
+        userName: $('#email_field').val(),
+        userPassword: $('#password_field').val(),
+        logindate: d
+      };
+
+      console.log(user.userName);
+
+      //'push' (aka add) your order to the existing list
+      // firebaseOrdersCollection.push(order); //'orders' is the name of the 'collection' (aka database table)
+      firebaseLoginsCollection.child(d).set(user);
+
+    }
+
+    function logout() {
+      firebase.auth().signOut();
+      window.location.href = "index.html";
+    }
+
+  </script>
+
+</body>
+
+</html>

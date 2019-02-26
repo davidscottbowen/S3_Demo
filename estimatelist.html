@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Estimate List</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <style>
+        .ellipsis {
+            max-width: 40px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        td,
+        th {
+            border: 1px solid
+        }
+
+        .menubar {
+            background-color: #555555;
+            min-height: 2000px;
+        }
+
+        .sides {
+            margin-left: 20px;
+        }
+
+        .top {
+            background-color: #3b5998;
+            min-height: 20;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .button2 {
+            background-color: #008CBA;
+        }
+
+        /* Blue */
+        .button3 {
+            background-color: #f44336;
+        }
+
+        /* Red */
+        .button4 {
+            background-color: #e7e7e7;
+            color: black;
+        }
+
+        /* Gray */
+        .button5 {
+            background-color: #555555;
+        }
+
+        /* Black */
+
+        .buttonlink {
+            background: none !important;
+            color: inherit;
+            border: none;
+            padding: 0 !important;
+            font: inherit;
+            /*border is optional*/
+            /* border-bottom: 1px solid #444; */
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="container layout"> -->
+    <div class="row top">
+        <div class="col-md-12 sides">
+            <img src="logo.png" alt="S3" height="60" width="60">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+        </div>
+
+        <div class="col-md-11">
+            <h1>Estimate List</h1>
+            <a class="button" onclick="newpart()">New</a>
+            <a class="button button2" onclick="logout()">Logout</a>
+            </br>
+            </br>
+            <!-- <table style="width:100%">
+                <tr>
+                    <td width="175" height="25">Part Number</td>
+                    <td width="100" height="25">Revision</td>
+                    <td width="200" height="25">Description</td>
+                    <td width="200" height="25">Customer</td>
+                    <td width="200" height="25">Drawing Number</td>
+                    <td width="200" height="25">Part Notes</td>
+                    <td width="200" height="25">Enter Date</td>
+                </tr>
+            </table> -->
+            <div id="previousOrders">
+                <table class="ellipsis" id="previousOrders" style="width:100%">
+                </table>
+                <!-- We will use javascript to insert html for the orders list here -->
+                <!-- if you don't want orders to show on the homepage, you can duplicate the page and remove this from here, leave the other one with a werid name so only you can find it -->
+            </div>
+        </div>
+    </div>
+    <!-- </div> -->
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/4.7.0/firebase.js"></script>
+
+    <script>
+        //Store information about your firebase so we can connect
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //IMPORTANT: REPLACE THESE WITH YOUR VALUES (these ones won't work)
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        var config = {
+            apiKey: "AIzaSyBWEZqPcKvPMcc3mieexX8nqcM0ItZnAmg",
+            authDomain: "s3dsb-eee49.firebaseapp.com",
+            databaseURL: "https://s3dsb-eee49.firebaseio.com",
+            projectId: "s3dsb-eee49",
+            storageBucket: "",
+            messagingSenderId: "463883835461"
+        };
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //initialize your firebase
+        firebase.initializeApp(config);
+        var database = firebase.database();
+        //create a variable to hold our orders list from firebase
+        var firebaseOrdersCollection = database.ref().child('demoparts');
+
+        //create a 'listener' which waits for changes to the values inside the firebaseOrdersCollection 
+        firebaseOrdersCollection.on('value', function (orders) {
+            //create an empty string that will hold our new HTML
+            var allOrdersHtml = "";
+            var sortArray = [];
+            //this is saying foreach order do the following function...
+            orders.forEach(function (firebaseOrderReference) {
+                //this gets the actual data (JSON) for the order.
+                var order = firebaseOrderReference.val();
+                console.log(order.saveDate);
+                sortArray.push(order);
+                // if (order.saveDate != undefined) {
+                //     sortArray.push(order);
+                // }
+            });
+
+            //sort sortArray by saveDate property of each element
+
+            sortArray.sort((a, b) => (a.saveDate < b.saveDate) ? 1 : -1)
+
+            for (i = 0; i < sortArray.length; i++) {
+
+                var n = new Date(parseInt(sortArray[i].saveDate));
+                var a = n.toLocaleString();
+                var individialOrderHtml = `  <tr>
+                                                <td width="150" height="30"><button class="buttonlink" onclick="myFunction('` + sortArray[i].fullName + `')">` + sortArray[i].fullName + `</button></td>
+                                                <td width="30" height="30">`+ sortArray[i].revision + `</td>
+                                                <td width="300" height="30">`+ sortArray[i].notes + `</td>
+                                                <td width="125" height="30">`+ sortArray[i].customer + `</td>
+                                                <td width="100" height="30">`+ sortArray[i].drawingNumber + `</td>
+                                                <td width="400" height="30">`+ sortArray[i].type + `</td>
+                                                <td width="175" height="30">`+ a + `</td>
+                                             </tr> `;
+                //add the individual order html to the end of the allOrdersHtml list
+                allOrdersHtml = allOrdersHtml + individialOrderHtml;
+            }
+            //actaull put the html on the page inside the element with the id PreviousOrders
+            $('#previousOrders').html(allOrdersHtml);
+            //note: an alternative approach would be to create a hidden html element for one order on the page, duplicate it in the forEach loop, unhide it, and replace the information, and add it back. 
+        });
+
+        function myFunction(name) {
+            var selectedpartname = name;
+            // sessionStorage.setItem("selectedpartname", selectedpartname);
+            localStorage.selectedpartname = selectedpartname;
+            window.location.href = "estimate.html";
+        }
+
+        function newpart() {
+            var selectedpartname = null;
+            sessionStorage.setItem("selectedpartname", selectedpartname);
+            window.location.href = "estimate.html";
+        }
+
+        function logout() {
+            firebase.auth().signOut();
+            window.location.href = "index.html";
+        }
+
+
+    </script>
+</body>
+
+</html>
